@@ -1,25 +1,35 @@
-#define DATA    5
-#define CLOCK   6
-#define LATCH   7
-#define ENABLE  8
 #define LED     13
+
+// For Shift Register TPIC6B595
+#define DATA    5   // SER IN
+#define CLOCK   6   // S RCK
+#define LATCH   7   // RCK
 
 int toggle = 0;
 int tmp = 0x01;
 
-void shift_out(uint8_t data) {
-    for(uint8_t i = 0; i < 8; i++) {
-        /* Write bit to data port. */
-        if (0 == (data & _BV(7 - i))) {
-            digitalWrite(DATA, HIGH);
-        } else {
-            digitalWrite(DATA, LOW);
-        }
-
-        /* Pulse clock input to write next bit. */
-        digitalWrite(CLOCK, HIGH);
-        digitalWrite(CLOCK, LOW);
+void shiftPush(unsigned char dIn){
+  char i;
+  for(i = 7;i >= 0; i--){
+    if ( (dIn & (0b1<<i)) != 0){
+      digitalWrite(DATA, LOW); // It might be inverted.
+    }else{
+      digitalWrite(DATA, HIGH);
     }
+    digitalWrite(CLOCK, LOW);
+    digitalWrite(CLOCK, HIGH);
+  } 
+}
+void shiftPrint8bit(unsigned char dIn){
+  digitalWrite(LATCH, LOW);
+  shiftPush(dIn);
+  digitalWrite(LATCH, HIGH);
+}
+void shiftPrint16bit(unsigned int dIn){
+  digitalWrite(LATCH, LOW);
+  shiftPush((dIn>>8)&0xFF);
+  shiftPush(dIn&0xFF);
+  digitalWrite(LATCH, HIGH);  
 }
 
 void setup() {
@@ -27,23 +37,18 @@ void setup() {
   pinMode(LATCH, OUTPUT);
   pinMode(CLOCK, OUTPUT);
   pinMode(DATA, OUTPUT);
-  pinMode(ENABLE, OUTPUT);
+  
   pinMode(LED, OUTPUT);
 }
 
 void loop() {
-  digitalWrite(LATCH, LOW);
-  for(uint8_t i = 0; i < 8; i++) {
-    if ( i == 6){
-      digitalWrite(DATA, HIGH);
-    }else{
-      digitalWrite(DATA, LOW);
-    }
-    
-    digitalWrite(CLOCK, LOW);
-    digitalWrite(CLOCK, HIGH);
+  for(unsigned char i = 0; i < 8 ;i++){
+    shiftPrint16bit(0b01<<i);
+    _delay_ms(50);
   }
-  digitalWrite(LATCH, HIGH);
+//  shiftPrint8bit(0b00000010);
+//  shiftPrint16bit(0b00000010);
+  
   if (toggle){
     digitalWrite(LED, HIGH);
   }
@@ -51,24 +56,6 @@ void loop() {
     digitalWrite(LED, LOW);
   }
   toggle = !toggle;
-  _delay_ms(500);
-//  digitalWrite(LED, LOW);
-  
-//  d
-//  digitalWrite(DATA, LOW);
-//  digitalWrite(CLOCK, LOW);
-//  digitalWrite(LATCH, LOW);
-//  _delay_ms(50);
-//  digitalWrite(LED, HIGH);
-////  for(uint16_t i = 0; i < 0xff; i++) {
-//        /* Shift high byte first to shift registers. */
-//        shift_out(i >> 8);
-//        shift_out(i & 0xff);
-//
-//        /* Pulse latch to0                                                                                                                                                                                                                                                        transfer data from shift registers */
-//        /* to storage registers. */
-    
-//
-         
-//    }
+  _delay_ms(250);
+
 }
