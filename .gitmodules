@@ -1,3 +1,3 @@
-[submodule "code/nano_MAX7219"]
-	path = code/nano_MAX7219
-	url = D:\\sudosx\\Dropbox\\proj\\workspace\\vending_machine\\code\\nano_MAX7219
+[submodule "code/nano_max7219"]
+	path = code/nano_max7219
+	url = ../arduino-nano-w-max7219.git
