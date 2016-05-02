@@ -1,0 +1,8 @@
+[ProjectGroup]
+Version=1.0
+[Project1]
+ProjectPath=VDMEDA_Main\VDMEDA_Main.PrjPcb
+[Project2]
+ProjectPath=VDMEDA_Display1\VDMEDA_Display1.PrjPCB
+[Project3]
+ProjectPath=VDMEDA_Display2\VDMEDA_Display2.PrjPCB
