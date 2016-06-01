@@ -1,3 +1,4 @@
 [submodule "code/nano_max7219"]
 	path = code/nano_max7219
-	url = ../arduino-nano-w-max7219.git
+	url = https://syanyong@bitbucket.org/sudosx/arduino-nano-max7219.git
+ 
