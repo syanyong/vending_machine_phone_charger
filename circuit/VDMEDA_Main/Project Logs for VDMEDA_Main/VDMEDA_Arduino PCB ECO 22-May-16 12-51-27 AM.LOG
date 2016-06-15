@@ -1,0 +1,13 @@
+Added Component: Designator=PIN_PWM(HDR1X2)
+Added Component: Designator=R8(AXIAL-0.3)
+Added Component: Designator=R9(AXIAL-0.3)
+Added Pin To Net: NetName=GND Pin=PIN_PWM-2
+Added Pin To Net: NetName=NetMCU_D2 Pin=R8-1
+Added Pin To Net: NetName=GND Pin=R9-1
+Added Pin To Net: NetName=NetMCU_D2 Pin=R9-2
+Added Pin To Net: NetName=NetPIN_PWM_1 Pin=PIN_PWM-1
+Added Pin To Net: NetName=NetPIN_PWM_1 Pin=R8-2
+Added Net: Name=NetPIN_PWM_1
+Added Member To Class: ClassName=VDMEDA_Arduino Member=Component PIN_PWM Header 2
+Added Member To Class: ClassName=VDMEDA_Arduino Member=Component R8 Res1
+Added Member To Class: ClassName=VDMEDA_Arduino Member=Component R9 Res1

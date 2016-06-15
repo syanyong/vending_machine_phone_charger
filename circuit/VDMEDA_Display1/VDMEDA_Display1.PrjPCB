@@ -28,7 +28,7 @@ PowerPortNamesTakePriority=0
 PushECOToAnnotationFile=1
 DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
-OutputPath=Project Outputs for VDMEDA_Display1
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 
@@ -117,7 +117,7 @@ SCH_HasExpandLogicalToPhysicalSheets=0
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=Project Outputs for VDMEDA_Display1
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs

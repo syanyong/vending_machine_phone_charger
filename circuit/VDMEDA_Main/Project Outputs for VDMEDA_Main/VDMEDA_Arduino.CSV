@@ -1,0 +1,11 @@
+"Bill of Material for "
+"On 05-May-16 at 5:03:44 PM"
+
+"Comment","Pattern","Quantity","Components"
+
+"ARDUINO_NANO","ARDUINO_NANO_ARDUINO_NANO(Primary)","1","MCU",""
+"Diode 1N4001","DO-41","1","D1","1 Amp General Purpose Rectifier"
+"Header 2","HDR1X2","9","PIN_1, PIN_2, PIN_3, PIN_4, PIN_5, PIN_6, PIN_7, PW1, PW1","Header, 2-Pin"
+"Header 5","HDR1X5","2","PD1, PD2","Header, 5-Pin"
+"Header 6","HDR1X6","1","POUT_1","Header, 6-Pin"
+"Res1","AXIAL-0.3","9","R1, R2, R3, R4, R5, R6, R7, R7, R7","Resistor"
