@@ -1,9 +1,12 @@
 /* INCLUDE */
 #include "sudosx_MAX7219.h"
+#include "TimerOne.h"
 #include "Adafruit_MCP23017.h"
 
 
 /* DEFINE */
+#define PIN_PWN       3
+
 #define MCP_IN11      0
 #define MCP_IN12      1
 #define MCP_IN13      2
@@ -29,21 +32,34 @@
 Adafruit_MCP23017 mcp;
 
 /* VARIABLE */
-
+volatile unsigned char coin = 0;
+unsigned short tim1 = 0;
+unsigned short tim2 = 0;
+unsigned short tim3 = 0;
+unsigned short tim4 = 0;
 
 void setup() {
     setupMAX7219();
-//    setupIOEx();
+    setupIOEx();
+    setupTimer();
+    setupExtInterrupt();
 
-    printSeg(1, 1);
-    printSeg(2, 2);
-    printSeg(3, 3);
-    printSeg(4, 4);
+    /* Initial State */
+    tim1 = 3600;
+    tim2 = 1800;
+    printSeg(1, 0);
+    printSeg(2, 0);
+    printSeg(3, 0);
+    printSeg(4, 0);
 } 
 
 
 void loop() {
-  _delay_ms(200);
+  printSeg(1, tim1);
+  printSeg(2, tim1/60);
+  printSeg(3, tim2/60);
+  printSeg(4, tim2);
+  _delay_ms(100);
 }
 
 /* FUNCTION **************************************************/
@@ -91,3 +107,28 @@ void setupIOEx(){
   mcp.digitalWrite(MCP_OUT04, LOW);
 }
 
+void setupTimer(){
+  Timer1.initialize(1000000);       // 1 Second
+  Timer1.attachInterrupt(callback); // Attaches callback() as a timer overflow interrupt
+}
+
+
+void setupExtInterrupt(){
+  attachInterrupt(digitalPinToInterrupt(PIN_PWN), callbackExtInput, RISING);
+}
+
+
+void callback()
+{
+  if (tim1 > 0){
+    tim1--;
+  }
+  if (tim2 > 0){
+    tim2--;
+  }
+}
+
+
+void callbackExtInput(){
+  coin++;
+}
