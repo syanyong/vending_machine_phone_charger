@@ -5,10 +5,10 @@
 
 void spiSend(uint8_t pin_ss, uint8_t command, unsigned short value)
 {
-  digitalWrite(pin_ss, HIGH);
+  digitalWrite(pin_ss, LOW);
   SPI.transfer(command);
   SPI.transfer(value);
-  digitalWrite(pin_ss, LOW);
+  digitalWrite(pin_ss, HIGH);
 }  
 
 void printSeg(uint8_t seg_no, unsigned short num){
@@ -34,7 +34,7 @@ void printSeg(uint8_t seg_no, unsigned short num){
 void initSingleChip(uint8_t ss){
   SPI.begin();
   pinMode(ss, OUTPUT);
-  digitalWrite(ss, LOW);
+  digitalWrite(ss, HIGH);
 
   spiSend(ss, 0xF,0x1);  // Enable Testing Mode
   _delay_ms(100);
