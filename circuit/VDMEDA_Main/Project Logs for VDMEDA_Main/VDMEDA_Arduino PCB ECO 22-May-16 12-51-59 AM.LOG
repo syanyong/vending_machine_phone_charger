@@ -1,4 +1,0 @@
-Removed Pin From Net: NetName=NetMCU_D6 Pin=POUT_1-4
-Removed Pin From Net: NetName=NetMCU_D7 Pin=POUT_1-5
-Added Pin To Net: NetName=NetMCU_D7 Pin=POUT_1-4
-Added Pin To Net: NetName=NetMCU_D6 Pin=POUT_1-5
