@@ -3,6 +3,10 @@ Version=1.0
 [Project1]
 ProjectPath=VDMEDA_Main\VDMEDA_Main.PrjPcb
 [Project2]
-ProjectPath=VDMEDA_Display1\VDMEDA_Display1.PrjPCB
+ProjectPath=VDMEDA_DisplayMaster\VDMEDA_Display1.PrjPCB
 [Project3]
-ProjectPath=VDMEDA_Display2\VDMEDA_Display2.PrjPCB
+ProjectPath=VDMEDA_DisplaySlave\VDMEDA_Display2.PrjPCB
+[Project4]
+ProjectPath=VDMEDA_7SegmentDriver\VDMEDA_7SegmentDriver.PrjPcb
+[Project5]
+ProjectPath=VDMEDA_7SegmentDisplay\VDMEDA_7SegDisp.PrjPcb
