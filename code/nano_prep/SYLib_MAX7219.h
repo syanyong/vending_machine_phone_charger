@@ -9,6 +9,7 @@ void spiSend(uint8_t pin_ss, uint8_t command, unsigned short value)
   SPI.transfer(command);
   SPI.transfer(value);
   digitalWrite(pin_ss, HIGH);
+  _delay_ms(2);
 }  
 
 void printSeg(uint8_t seg_no, unsigned short num){
@@ -32,12 +33,8 @@ void printSeg(uint8_t seg_no, unsigned short num){
 }
 
 void initSingleChip(uint8_t ss){
-  SPI.begin();
-  pinMode(ss, OUTPUT);
-  digitalWrite(ss, HIGH);
-
   spiSend(ss, 0xF,0x1);  // Enable Testing Mode
-  _delay_ms(100);
+  _delay_ms(250);
   spiSend(ss, 0xF,0x0);  // Disable Testing Mode
   spiSend(ss, 0xC,0x1);  // Go normal operation
 
@@ -51,6 +48,18 @@ void initSingleChip(uint8_t ss){
 }
 
 void setupMAX7219(){
+  _delay_ms(1000);
+  
+  SPI.begin();
+
+  pinMode(SPI_SS1, OUTPUT);
+  digitalWrite(SPI_SS1, HIGH);
+
+  pinMode(SPI_SS2, OUTPUT);
+  digitalWrite(SPI_SS2, HIGH);
+
 	initSingleChip(SPI_SS1);
+  _delay_ms(250);
 	initSingleChip(SPI_SS2);
+  _delay_ms(250);
 }
