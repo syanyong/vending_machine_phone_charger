@@ -36,6 +36,7 @@ void initSingleChip(uint8_t ss){
   spiSend(ss, 0xF,0x1);  // Enable Testing Mode
   _delay_ms(250);
   spiSend(ss, 0xF,0x0);  // Disable Testing Mode
+  // spiSend(ss, 0xC,0x0);
   spiSend(ss, 0xC,0x1);  // Go normal operation
 
   spiSend(ss, 0xB,0x7);  // Set Scan Limit
@@ -43,23 +44,20 @@ void initSingleChip(uint8_t ss){
   spiSend(ss, 0xA, 0x1); // Set intensity
   
   for (unsigned char i=1; i <=8; i++){
-  	spiSend(ss, i, 0x0);
+  	spiSend(ss, i, 0x9);
+    _delay_ms(20);
   }
 }
 
 void setupMAX7219(){
-  _delay_ms(1000);
-  
   SPI.begin();
 
   pinMode(SPI_SS1, OUTPUT);
   digitalWrite(SPI_SS1, HIGH);
+  initSingleChip(SPI_SS1);
 
   pinMode(SPI_SS2, OUTPUT);
   digitalWrite(SPI_SS2, HIGH);
+  initSingleChip(SPI_SS2);
 
-	initSingleChip(SPI_SS1);
-  _delay_ms(250);
-	initSingleChip(SPI_SS2);
-  _delay_ms(250);
 }
