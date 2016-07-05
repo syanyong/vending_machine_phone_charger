@@ -41,14 +41,19 @@ Adafruit_MCP23017 mcp;
 /* VARIABLE */
 uint8_t coin = 0;
 uint8_t pt_sel = 0;
-uint8_t blink_togg = 0;
-uint16_t temp = 0;
+uint8_t blink = 0;
 char _pt[20];
 
 uint8_t io_now[12];
 uint8_t io_prv[12];
 uint16_t disp[4];
 
+uint8_t blink1 = 0;
+uint8_t blink2 = 0;
+uint8_t blink3 = 0;
+uint8_t blink4 = 0;
+
+uint8_t tim60sec = 0;
 uint8_t tim1 = 0;
 uint8_t tim2 = 0;
 uint8_t tim3 = 0;
@@ -101,7 +106,7 @@ void loop() {
 		pt_sel = 4;
 	}
 	if (pt_sel == 1) {
-		selectingScreen(SEG1, coin, &blink_togg);
+		selectingScreen(SEG1, coin, &blink);
 		disp[0] = coin;
 
 		if (io_now[BT_STR1] == 1){
@@ -115,7 +120,7 @@ void loop() {
 		}
 	}
 	else if(pt_sel == 2){
-		selectingScreen(SEG2, coin, &blink_togg);
+		selectingScreen(SEG2, coin, &blink);
 		disp[1] = coin;
 
 		if (io_now[BT_STR2] == 1){
@@ -129,7 +134,7 @@ void loop() {
 		}
 	}
 	else if(pt_sel == 3){
-		selectingScreen(SEG3, coin, &blink_togg);
+		selectingScreen(SEG3, coin, &blink);
 		disp[2] = coin;
 
 		if (io_now[BT_STR3] == 1){
@@ -143,7 +148,7 @@ void loop() {
 		}
 	}	
 	else if(pt_sel == 4){
-		selectingScreen(SEG4, coin, &blink_togg);
+		selectingScreen(SEG4, coin, &blink);
 		disp[3] = coin;
 
 		if (io_now[BT_STR4] == 1){
@@ -191,15 +196,27 @@ void loop() {
 	 */
 	if (pt_sel != 1){
 		disp[0] = tim1;
+		if (tim1 > 0){
+			scrShowRunning(SEG1, tim1, &blink1);
+		}
 	}
 	if (pt_sel != 2){
 		disp[1] = tim2;
+		if (tim2 > 0){
+			scrShowRunning(SEG2, tim2, &blink2);
+		}
 	}
 	if (pt_sel != 3){
 		disp[2] = tim3;
+		if (tim3 > 0){
+			scrShowRunning(SEG3, tim3, &blink3);
+		}
 	}
 	if (pt_sel != 4){
 		disp[3] = tim4;
+		if (tim4 > 0){
+			scrShowRunning(SEG4, tim4, &blink4);
+		}
 	}
 
 
@@ -255,6 +272,19 @@ void selectingScreen(uint8_t seg, uint8_t data, uint8_t* blink_state){
 	_delay_ms(20);
 	*(blink_state) = !*(blink_state);
 
+}
+
+void scrShowRunning(uint8_t seg, uint8_t data, uint8_t* blink_state){
+	if (*(blink_state)){
+		printSeg(seg, data);
+	}else{
+		printSegChar(seg, 0, 0xF);
+		printSegChar(seg, 1, 0xF);
+		printSegChar(seg, 2, 0xF);
+		printSegChar(seg, 3, 0xF);
+	}
+	_delay_ms(20);
+	*(blink_state) = !*(blink_state);	
 }
 
 void _printArr(unsigned char *arr){
@@ -341,7 +371,7 @@ void testBT(){
  * @brief: Coin to seconds.
  */
 unsigned short coin2Timer(unsigned char coin){
-	return coin*10;
+	return coin*2;
 }
 
 
@@ -376,7 +406,7 @@ void setupIntExt(){
 void ISRCallback()
 {
 	/* 1 sec */
-	// if (tim_min++ > 10){
+	if (tim60sec++ > 60){
 		if ((tim1 > 0) && (is_ena1==1)){
 			tim1--;
 		}
@@ -389,8 +419,8 @@ void ISRCallback()
 		if ((tim4 > 0) && (is_ena4==1)){
 			tim4--;
 		}
-	// 	tim_min = 0;
-	// }
+		tim60sec = 0;
+	}
 }
 
 
