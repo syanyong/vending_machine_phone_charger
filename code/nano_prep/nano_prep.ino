@@ -6,7 +6,7 @@
 
 
 /* DEFINE */
-#define PIN_PWN       3
+#define PIN_PWN       2
 
 #define SEG1	1
 #define SEG2	3
@@ -74,21 +74,21 @@ void loop() {
 	printSeg(SEG2, disp[1]);
 	printSeg(SEG3, disp[2]);
 	printSeg(SEG4, disp[3]);
-	_printArr(io_now);
+	// _printArr(io_now);
 	
 	/* PAUSE */
-	if (io_now[BT_STR1]){
-		is_ena1 = !is_ena1;
-	}
-	if (io_now[BT_STR2]){
-		is_ena2 = !is_ena2;
-	}
-	if (io_now[BT_STR3]){
-		is_ena3 = !is_ena3;
-	}
-	if (io_now[BT_STR4]){
-		is_ena4 = !is_ena4;
-	}
+	// if (io_now[BT_STR1]){
+	// 	is_ena1 = !is_ena1;
+	// }
+	// if (io_now[BT_STR2]){
+	// 	is_ena2 = !is_ena2;
+	// }
+	// if (io_now[BT_STR3]){
+	// 	is_ena3 = !is_ena3;
+	// }
+	// if (io_now[BT_STR4]){
+	// 	is_ena4 = !is_ena4;
+	// }
 
 	 // TASK1: SELECTION 
 	if (io_now[BT_SEL1]) {
@@ -104,8 +104,7 @@ void loop() {
 		pt_sel = 4;
 	}
 	if (pt_sel == 1) {
-		if(blink_togg){  disp[0] = coin;  }else{  disp[0] = 0;  }
-		blink_togg = !blink_togg;
+		selectingScreen(SEG1, coin, &blink_togg);
 
 		if (io_now[BT_STR1] == 1){
 			tim1 = coin2Timer(coin);
@@ -115,8 +114,7 @@ void loop() {
 		}
 	}
 	else if(pt_sel == 2){
-		if(blink_togg){  disp[1] = coin;  }else{  disp[1] = 0;  }
-		blink_togg = !blink_togg;
+		selectingScreen(SEG2, coin, &blink_togg);
 
 		if (io_now[BT_STR2] == 1){
 			tim2 = coin2Timer(coin);
@@ -126,8 +124,7 @@ void loop() {
 		}
 	}
 	else if(pt_sel == 3){
-		if(blink_togg){  disp[2] = coin;  }else{  disp[2] = 0;  }
-		blink_togg = !blink_togg;
+		selectingScreen(SEG3, coin, &blink_togg);
 
 		if (io_now[BT_STR3] == 1){
 			tim3 = coin2Timer(coin);
@@ -137,8 +134,7 @@ void loop() {
 		}
 	}	
 	else if(pt_sel == 4){
-		if(blink_togg){  disp[3] = coin;  }else{  disp[3] = 0;  }
-		blink_togg = !blink_togg;
+		selectingScreen(SEG4, coin, &blink_togg);
 
 		if (io_now[BT_STR4] == 1){
 			tim4 = coin2Timer(coin);
@@ -152,7 +148,7 @@ void loop() {
 	}
 
 
-	// /* STOP BUTTON */
+	/* STOP BUTTON */
 	if (io_now[BT_STP1]){
 		is_ena1 = 0;
 		disp[0] = 0;
@@ -174,23 +170,49 @@ void loop() {
 		tim4 = 0;
 	}
 
-	// /* DISPLAY */
-	if (tim1 != 0){
+	/* DISPLAY */
+	if (is_ena1 != 0){
 		disp[0] = tim1;
 	}
-	if (tim2 != 0){
+	if (is_ena2 != 0){
 		disp[1] = tim2;
 	}
-	if (tim3 != 0){
+	if (is_ena3 != 0){
 		disp[2] = tim3;
 	}
-	if (tim4 != 0){
+	if (is_ena4 != 0){
 		disp[3] = tim4;
 	}
 
+
+	if (tim1 == 0){
+		is_ena1 = 0;
+	}
+	if (tim2 == 0){
+		is_ena2 = 0;
+	}
+	if (tim3 == 0){
+		is_ena3 = 0;
+	}
+	if (tim4 == 0){
+		is_ena4 = 0;
+	}
+
+}
+/* FUNCTION **********************************************/
+void selectingScreen(uint8_t seg, uint8_t data, uint8_t* blink_state){
+	if (*(blink_state)){
+		printSeg(seg, data);
+	}else{
+		printSegChar(seg, 3, 0xA);
+	}
+	_delay_ms(20);
+	*(blink_state) = !*(blink_state);
+
+	// Overide disp[]
+	disp[seg-1] = data;
 }
 
-/* FUNCTION **********************************************/
 void _printArr(unsigned char *arr){
 	Serial.print("<");
 	for (unsigned char i = 0 ; i < 12 ; i++){
@@ -214,7 +236,7 @@ void getBTRel(unsigned int io_in, uint8_t* io_prv, uint8_t* io_now){
 			// 	*(io_now+i) = 0;
 			// }
 			*(io_prv+i) = ion;
-	}
+ 	}
 }
 
 void test7Seg(uint16_t* ts){
@@ -302,7 +324,8 @@ void setupIntTimer(){
 
 
 void setupIntExt(){
-	attachInterrupt(digitalPinToInterrupt(PIN_PWN), ISRCallbackExtInput, RISING);
+	pinMode(PIN_PWN, INPUT);
+	attachInterrupt(digitalPinToInterrupt(PIN_PWN), ISRCallbackExtInput, FALLING);
 }
 
 
