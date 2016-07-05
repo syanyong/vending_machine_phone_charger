@@ -29,6 +29,11 @@
 #define BT_STR4    10
 #define BT_STP4    11
 
+#define RELAY1		15
+#define RELAY2		14
+#define RELAY3		13
+#define RELAY4		12
+
 /* DECLARE */
 Adafruit_MCP23017 mcp;
 
@@ -69,6 +74,9 @@ void setup() {
 } 
 
 void loop() {
+	/*
+	 *  TASK: I/O Update
+	 */
 	getBTRel(mcp.readGPIOAB(), io_prv, io_now);
 	printSeg(SEG1, disp[0]);
 	printSeg(SEG2, disp[1]);
@@ -76,21 +84,10 @@ void loop() {
 	printSeg(SEG4, disp[3]);
 	// _printArr(io_now);
 	
-	/* PAUSE */
-	// if (io_now[BT_STR1]){
-	// 	is_ena1 = !is_ena1;
-	// }
-	// if (io_now[BT_STR2]){
-	// 	is_ena2 = !is_ena2;
-	// }
-	// if (io_now[BT_STR3]){
-	// 	is_ena3 = !is_ena3;
-	// }
-	// if (io_now[BT_STR4]){
-	// 	is_ena4 = !is_ena4;
-	// }
 
-	 // TASK1: SELECTION 
+	/*
+	 *  TASK: SELECTION
+	 */
 	if (io_now[BT_SEL1]) {
 		pt_sel = 1;
 	}
@@ -105,50 +102,68 @@ void loop() {
 	}
 	if (pt_sel == 1) {
 		selectingScreen(SEG1, coin, &blink_togg);
+		disp[0] = coin;
 
 		if (io_now[BT_STR1] == 1){
 			tim1 = coin2Timer(coin);
 			coin = 0;
 			is_ena1 = 1;
 			pt_sel = 0;
+		}else if (io_now[BT_STP1] == 1){
+			coin   = 0;
+			pt_sel = 0;
 		}
 	}
 	else if(pt_sel == 2){
 		selectingScreen(SEG2, coin, &blink_togg);
+		disp[1] = coin;
 
 		if (io_now[BT_STR2] == 1){
 			tim2 = coin2Timer(coin);
 			coin = 0;
 			is_ena2 = 1;
 			pt_sel = 0;
+		}else if (io_now[BT_STP2] == 1){
+			coin   = 0;
+			pt_sel = 0;
 		}
 	}
 	else if(pt_sel == 3){
 		selectingScreen(SEG3, coin, &blink_togg);
+		disp[2] = coin;
 
 		if (io_now[BT_STR3] == 1){
 			tim3 = coin2Timer(coin);
 			coin = 0;
 			is_ena3 = 1;
 			pt_sel = 0;
+		}else if (io_now[BT_STP3] == 1){
+			coin   = 0;
+			pt_sel = 0;
 		}
 	}	
 	else if(pt_sel == 4){
 		selectingScreen(SEG4, coin, &blink_togg);
+		disp[3] = coin;
 
 		if (io_now[BT_STR4] == 1){
 			tim4 = coin2Timer(coin);
 			coin = 0;
 			is_ena4 = 1;
 			pt_sel = 0;
-		}	
+		}else if (io_now[BT_STP4] == 1){
+			coin   = 0;
+			pt_sel = 0;
+		}
 	}
 	else{
 
 	}
 
 
-	/* STOP BUTTON */
+	/*
+	 *  TASK: STOP
+	 */
 	if (io_now[BT_STP1]){
 		is_ena1 = 0;
 		disp[0] = 0;
@@ -170,21 +185,27 @@ void loop() {
 		tim4 = 0;
 	}
 
-	/* DISPLAY */
-	if (is_ena1 != 0){
+
+	/*
+	 *  TASK: DISPLAY COUNTER TIMER
+	 */
+	if (pt_sel != 1){
 		disp[0] = tim1;
 	}
-	if (is_ena2 != 0){
+	if (pt_sel != 2){
 		disp[1] = tim2;
 	}
-	if (is_ena3 != 0){
+	if (pt_sel != 3){
 		disp[2] = tim3;
 	}
-	if (is_ena4 != 0){
+	if (pt_sel != 4){
 		disp[3] = tim4;
 	}
 
 
+	/*
+	 *  TASK: TIMEOUT
+	 */
 	if (tim1 == 0){
 		is_ena1 = 0;
 	}
@@ -198,6 +219,31 @@ void loop() {
 		is_ena4 = 0;
 	}
 
+
+	/*
+	 *  TASK: DRIVER
+	 */
+	if (tim1 != 0){
+		mcp.digitalWrite(RELAY1, LOW);
+	}else{
+		mcp.digitalWrite(RELAY1, HIGH);
+	}
+	if (tim2 != 0){
+		mcp.digitalWrite(RELAY2, LOW);
+	}else{
+		mcp.digitalWrite(RELAY2, HIGH);
+	}
+	if (tim3 != 0){
+		mcp.digitalWrite(RELAY3, LOW);
+	}else{
+		mcp.digitalWrite(RELAY3, HIGH);
+	}
+	if (tim4 != 0){
+		mcp.digitalWrite(RELAY4, LOW);
+	}else{
+		mcp.digitalWrite(RELAY4, HIGH);
+	}
+
 }
 /* FUNCTION **********************************************/
 void selectingScreen(uint8_t seg, uint8_t data, uint8_t* blink_state){
@@ -209,8 +255,6 @@ void selectingScreen(uint8_t seg, uint8_t data, uint8_t* blink_state){
 	_delay_ms(20);
 	*(blink_state) = !*(blink_state);
 
-	// Overide disp[]
-	disp[seg-1] = data;
 }
 
 void _printArr(unsigned char *arr){
@@ -229,12 +273,12 @@ void getBTRel(unsigned int io_in, uint8_t* io_prv, uint8_t* io_now){
 	uint8_t ion;
 	for (uint8_t i = 0 ; i < 12 ; i++) {
 			ion = !( (io_in >> i) & 0x1); //Active Low
-			*(io_now+i) = ion;
-			// if ( (*(io_prv+i) == 1) && (ion == 0) ){
-			// 	*(io_now+i) = 1;
-			// } else{
-			// 	*(io_now+i) = 0;
-			// }
+			// *(io_now+i) = ion;
+			if ( (*(io_prv+i) == 1) && (ion == 0) ){
+				*(io_now+i) = 1;
+			} else{
+				*(io_now+i) = 0;
+			}
 			*(io_prv+i) = ion;
  	}
 }
@@ -312,7 +356,7 @@ void setupIOExpander(){
 	/* Output */
 	for (unsigned char i = 12; i <= 15; i++){
 		mcp.pinMode(i, OUTPUT);
-		mcp.digitalWrite(i, LOW);
+		mcp.digitalWrite(i, HIGH);
 	}
 }
 
