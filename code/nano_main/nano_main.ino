@@ -67,7 +67,7 @@ uint8_t is_ena4 = 0;
 
 /* MAIN **************************************************/
 void setup() {
-		_delay_ms(1000);
+		_delay_ms(4000);
 		Serial.begin(9600);
 		Serial.println("Hello World");
 
@@ -94,15 +94,19 @@ void loop() {
 	 *  TASK: SELECTION
 	 */
 	if (io_now[BT_SEL1]) {
+		coin = 0;
 		pt_sel = 1;
 	}
 	else if (io_now[BT_SEL2]) {
+		coin = 0;
 		pt_sel = 2;
 	}
 	else if (io_now[BT_SEL3]) {
+		coin = 0;
 		pt_sel = 3;
 	}
 	else if (io_now[BT_SEL4]) {
+		coin = 0;
 		pt_sel = 4;
 	}
 	if (pt_sel == 1) {
