@@ -8,7 +8,7 @@ The machine contains one of coin insert, 4 mobile charger and 4 selects, 4 start
 * Firstly, select mobile charger by push select button. 
 * Secondly, insert coin that the 7 segment shall show the charging time.
 * Thirdly, push the start button to start charging that the relay shall be energized, and 7 segments shall show the countdown timer.
-* While charging, if start button is pushed, the countdown timer shall pause, and relay shall de-energize.
+* [*Not implemented*] While charging, if start button is pushed, the countdown timer shall pause, and relay shall de-energize.
 * While charging, if the stop button is pushed, the countdown timer shall reset to 0, and relay shall de-energize.
 
 ### Components ###
