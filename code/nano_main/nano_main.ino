@@ -375,7 +375,17 @@ void testBT(){
  * @brief: Coin to seconds.
  */
 unsigned short coin2Timer(unsigned char coin){
-	return coin*2;
+    unsigned short out = 0;
+    if ((coin >= 1) && (coin < 5)){
+        out = coin*5;
+    }
+    else if ((coin >= 5) && (coin < 150)){
+        out = coin*6;
+    }
+  else{
+    out = 900;
+  }
+    return out;
 }
 
 
